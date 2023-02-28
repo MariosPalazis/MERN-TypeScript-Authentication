@@ -3,3 +3,8 @@ export interface IUser  {
     password: string;
     date: Date;
 }
+
+export interface IUserResponse  {
+    username: string;
+    token: string;
+}

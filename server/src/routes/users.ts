@@ -1,5 +1,5 @@
 import { request, Request, Response, Router } from 'express';
-import {IUser} from '../interfaces/schemas';
+import {IUser, IUserResponse} from '../interfaces/schemas';
 import userModel from '../models/Users'
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -54,6 +54,30 @@ userRoute.post('/createuser', async (req: Request, res: Response): Promise<any> 
     }
 });
 
+
+userRoute.post('/login', async (req: Request, res: Response): Promise<any> => {
+    
+    try{
+        if(!(req.body.username && req.body.password && typeof req.body.username === 'string' && typeof req.body.password === 'string')){
+            return res.status(400).send();
+        }
+        const user = await userModel.findOne({username: req.body.username});
+        if(!user) return res.status(400).send("Wrong Username / Password");
+
+        const validPass = await bcrypt.compare(req.body.password, user.password);
+        if(!validPass) return res.status(400).send('Wrong Username / Password');
+    
+
+        const token = jwt.sign({_id: user._id}, String(process.env.TOKEN_SECRET));
+
+        res.status(200).send({
+            token: token,
+            username: user.username,
+        });
+    }catch(err){
+        return res.status(400).send(err);
+    }
+});
 
 userRoute.get('/getdata',verifyUser, async (req: Request, res: Response): Promise<any> => { 
     const token: any = req.token;
