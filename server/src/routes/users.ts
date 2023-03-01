@@ -56,6 +56,7 @@ userRoute.post('/createuser', async (req: Request, res: Response): Promise<any> 
 
 
 userRoute.post('/login', async (req: Request, res: Response): Promise<any> => {
+    console.log(req.body)
     
     try{
         if(!(req.body.username && req.body.password && typeof req.body.username === 'string' && typeof req.body.password === 'string')){

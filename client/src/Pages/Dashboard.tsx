@@ -1,17 +1,17 @@
 import React from 'react';
 import { useGlobalContext } from '../Wrappers/useUserContext';
-
+import { useAuth } from '../hooks/useAuth';
 interface DashboardProps {
     
 }
 
 const Dashboard = () => {
-    const { user } = useGlobalContext()
+    const { stored } = useAuth()
 
     return (
         <div>
             dashboard
-            <div>{user.username}</div>
+            <div>{stored.username}</div>
         </div>
     );
 };

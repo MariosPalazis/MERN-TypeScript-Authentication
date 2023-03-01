@@ -1,16 +1,13 @@
 import React,{useState} from 'react';
 import { Navigate} from "react-router-dom";
 import axios from 'axios';
-import { useGlobalContext } from '../Wrappers/useUserContext';
+//import { useGlobalContext } from '../Wrappers/useUserContext';
+import { Credentials } from '../interfaces/global';
+import { useAuth } from '../hooks/useAuth';
 
-
-interface Credentials {
-    username:string,
-    password:string
-}
 
 const Login: React.FC = () => {
-    const { setUser } = useGlobalContext()
+    const { loginFromServer } = useAuth()
 
     const [credentials, setCredentials] = useState<Credentials>({
         username:"",
@@ -26,29 +23,13 @@ const Login: React.FC = () => {
     const setFields = (event: React.ChangeEvent<HTMLInputElement> ) =>{
         setCredentials({...credentials,[ event.target.name]: event.target.value})
     }
-    function loginUser(credentials: Credentials) {
-        axios.post('http://localhost:9000' + "/users/login" ,  credentials).then(res => {
-            // do good things
-            console.log(1);
-            setLoader(false);
-            console.log(res);
-            setUser(res.data);
-            sessionStorage.setItem('token', JSON.stringify(res.data))
-        })
-        .catch(err => {
-            console.log(err.response);
-            //setServerResponse("Wrong Username/Password");
-            setLoader(false);
-        });
-        
-    }
 
     const login = (e: React.MouseEvent<HTMLElement>) =>{
         e.preventDefault();
         console.log(credentials);
         if(credentials.username !== "" && credentials.password !== ""){
             setLoader(true)
-            loginUser(credentials);
+            loginFromServer(credentials)
         }else{
             //server response
         }

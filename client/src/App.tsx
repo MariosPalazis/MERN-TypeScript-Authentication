@@ -14,16 +14,14 @@ import { AuthProvider } from './hooks/useAuth';
 import ProtectedRoute from './components/ProtectedRoute';
 function App() {
 
-  const [user, setUser] = useState<GlobalUserContent>({})
-
   return (
     <BrowserRouter >
       <AuthProvider>
         <Routes>
             <Route path='/' element={<Landing />} />
             <Route path='/login' element={<Login />} />
-            <ProtectedRoute path='/dashboard' element={ <Dashboard />} />
-            <ProtectedRoute path='/profile' element={<Profile />} />
+            <Route path='/dashboard' element={<ProtectedRoute><Dashboard /></ProtectedRoute> } />
+            <Route path='/profile' element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path='*' element={<Error/>} />
         </Routes>
       </AuthProvider>
